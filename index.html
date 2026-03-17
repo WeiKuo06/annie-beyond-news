@@ -2048,8 +2048,16 @@
 
   // Initialize
   loadSong(0);
-  audio.volume = 0.7;
-  volumeLevel.style.width = '70%';
+  audio.volume = 0.6;
+  volumeLevel.style.width = '60%';
+  
+  // Auto-play on page load
+  window.addEventListener('load', () => {
+    audio.play().catch(err => {
+      console.log('Autoplay prevented:', err);
+    });
+    playPauseBtn.textContent = '⏸';
+  });
 </script>
 
 </body>
