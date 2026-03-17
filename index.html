@@ -1937,7 +1937,7 @@
   </div>
 </div>
 
-<audio id="audioPlayer" crossorigin="anonymous"></audio>
+<audio id="audioPlayer" crossorigin="anonymous" muted="muted"></audio>
 
 <script>
   // Music player configuration
@@ -2052,12 +2052,25 @@
   volumeLevel.style.width = '60%';
   
   // Auto-play on page load
-  window.addEventListener('load', () => {
-    audio.play().catch(err => {
-      console.log('Autoplay prevented:', err);
-    });
-    playPauseBtn.textContent = '⏸';
-  });
+  function attemptAutoplay() {
+    audio.muted = false;
+    const playPromise = audio.play();
+    if (playPromise !== undefined) {
+      playPromise.then(() => {
+        playPauseBtn.textContent = '⏸';
+      }).catch(err => {
+        console.log('Autoplay prevented');
+      });
+    }
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attemptAutoplay);
+  } else {
+    attemptAutoplay();
+  }
+  
+  window.addEventListener('load', attemptAutoplay);
 </script>
 
 </body>
